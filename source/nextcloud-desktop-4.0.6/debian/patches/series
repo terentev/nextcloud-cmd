@@ -1,0 +1,4 @@
+0001-fix-installationpath-of-dolphin-plugin.patch
+0002-use_system_buildflags.patch
+0003-Use-release-version-for-Debian.patch
+0004-GIT_SHA1-points-to-the-sha1-of-upstream.patch

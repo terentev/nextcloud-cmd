@@ -1,0 +1,3 @@
+# libnextcloud isn't used outside this package, so we ship no symbol file
+libnextcloudsync0t64: no-symbols-control-file usr/lib/*/libnextcloudsync.so.*
+libnextcloudsync0t64: no-symbols-control-file usr/lib/*/libnextcloud_csync.so.*

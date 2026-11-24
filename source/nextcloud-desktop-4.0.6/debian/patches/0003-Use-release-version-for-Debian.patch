@@ -1,0 +1,22 @@
+From: =?utf-8?q?Christian_G=C3=B6ttsche?= <cgzones@googlemail.com>
+Date: Mon, 4 Jan 2021 14:15:00 +0100
+Subject: Use release version for Debian
+
+Forwarded: not-needed
+---
+ VERSION.cmake | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/VERSION.cmake b/VERSION.cmake
+index 591e40c..9370ad6 100644
+--- a/VERSION.cmake
++++ b/VERSION.cmake
+@@ -70,3 +70,8 @@ endif()
+ # ------------------------------------
+ # Not used anymore. For brander, please maintain craftmaster.ini
+ set(QT_MAJOR_VERSION 6)
++
++# Version from Debian changelog
++if( EXTERNAL_VERSION )
++    set( MIRALL_VERSION_STRING "${EXTERNAL_VERSION} (Debian built)" )
++endif( EXTERNAL_VERSION )

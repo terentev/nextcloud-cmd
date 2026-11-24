@@ -1,0 +1,41 @@
+From: =?utf-8?q?Sandro_Knau=C3=9F?= <hefee@debian.org>
+Date: Tue, 15 Jan 2019 22:21:35 +0100
+Subject: Debianize installation folder for kde plugin
+
+Origin: Debian
+Forwarded: not-needed
+Last-Update: 2023-02-04
+
+Inside debian we want that the kde plugins are directly found,
+so we need to push them to known places.
+---
+ shell_integration/dolphin/CMakeLists.txt | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/shell_integration/dolphin/CMakeLists.txt b/shell_integration/dolphin/CMakeLists.txt
+index 56e1927..4ca3703 100644
+--- a/shell_integration/dolphin/CMakeLists.txt
++++ b/shell_integration/dolphin/CMakeLists.txt
+@@ -43,7 +43,7 @@ add_library(${OWNCLOUDDOLPHINHELPER} SHARED
+     ownclouddolphinpluginhelper.cpp)
+ target_link_libraries(${OWNCLOUDDOLPHINHELPER} Qt${QT_MAJOR_VERSION}::Network)
+ generate_export_header(${OWNCLOUDDOLPHINHELPER} BASE_NAME ownclouddolphinpluginhelper)
+-install(TARGETS ${OWNCLOUDDOLPHINHELPER} LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
++install(TARGETS ${OWNCLOUDDOLPHINHELPER} LIBRARY DESTINATION "${CMAKE_INSTALL_PREFIX}/${LIB_INSTALL_DIR}/${APPLICATION_EXECUTABLE}")
+ 
+ #---OVERLAY PLUGIN---
+ set(OWNCLOUDDOLPHINOVERLAYPLUGIN ${APPLICATION_EXECUTABLE}dolphinoverlayplugin)
+@@ -55,6 +55,8 @@ else()
+                            JSON ownclouddolphinoverlayplugin.json SOURCES ownclouddolphinoverlayplugin.cpp)
+ endif()
+ target_link_libraries(${OWNCLOUDDOLPHINOVERLAYPLUGIN} KF${QT_MAJOR_VERSION}::CoreAddons KF${QT_MAJOR_VERSION}::KIOCore KF${QT_MAJOR_VERSION}::KIOWidgets ${OWNCLOUDDOLPHINHELPER})
++set_target_properties(${OWNCLOUDDOLPHINOVERLAYPLUGIN} PROPERTIES INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/${LIB_INSTALL_DIR}/${APPLICATION_EXECUTABLE}")
++
+ 
+ #---ACTION PLUGIN---
+ set(OWNCLOUDDOLPHINACTIONPLUGIN ${APPLICATION_EXECUTABLE}dolphinactionplugin)
+@@ -62,3 +64,4 @@ configure_file(ownclouddolphinactionplugin.json.in ${OWNCLOUDDOLPHINACTIONPLUGIN
+ kcoreaddons_add_plugin(${OWNCLOUDDOLPHINACTIONPLUGIN} INSTALL_NAMESPACE "kf${QT_MAJOR_VERSION}/kfileitemaction"
+                        SOURCES ownclouddolphinactionplugin.cpp)
+ target_link_libraries(${OWNCLOUDDOLPHINACTIONPLUGIN} KF${QT_MAJOR_VERSION}::CoreAddons KF${QT_MAJOR_VERSION}::KIOCore KF${QT_MAJOR_VERSION}::KIOWidgets ${OWNCLOUDDOLPHINHELPER})
++set_target_properties(${OWNCLOUDDOLPHINACTIONPLUGIN} PROPERTIES INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/${LIB_INSTALL_DIR}/${APPLICATION_EXECUTABLE}")

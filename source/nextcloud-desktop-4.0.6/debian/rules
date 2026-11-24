@@ -1,0 +1,56 @@
+#!/usr/bin/make -f
+export DEB_BUILD_MAINT_OPTIONS = hardening=+all optimize=+lto
+
+include /usr/share/dpkg/pkg-info.mk
+
+webengine_archs := amd64 arm64 armhf i386
+ifeq ($(DEB_HOST_ARCH), $(filter $(DEB_HOST_ARCH),$(webengine_archs)))
+BUILD_WEBENGINE := ON
+else
+BUILD_WEBENGINE := OFF
+endif
+
+CONFIGURE_OPTIONS := -DCMAKE_INSTALL_PREFIX=/usr \
+	-DBUILD_UPDATER=OFF \
+	-DPLUGINDIR=/usr/lib/$(DEB_HOST_GNU_TYPE)/qt6/plugins \
+	-DEXTERNAL_VERSION=$(DEB_VERSION)
+
+%:
+	dh $@
+
+override_dh_auto_configure:
+ifeq (-i,$(findstring -i, $(DH_INTERNAL_OPTIONS)))
+	@echo " -- Configure for arch all only build --"
+	dh_auto_configure -- \
+		-DBUILD_TESTING=OFF \
+		-DBUILD_SHELL_INTEGRATION_DOLPHIN=OFF \
+		-DBUILD_WITH_WEBENGINE=OFF \
+		$(CONFIGURE_OPTIONS)
+else
+	dh_auto_configure -- \
+		-DUNIT_TESTING=ON \
+		-DBUILD_WITH_WEBENGINE=$(BUILD_WEBENGINE) \
+		$(CONFIGURE_OPTIONS)
+endif
+execute_before_dh_auto_build-arch:
+	@echo "blhc: ignore-line-regexp: .*/CMakeCXXCompilerABI.cpp.*"
+	#tests are not built with all hardening, to debug stuff more easily
+	@echo "blhc: ignore-line-regexp: .*Test.dir/.*"
+	@echo "blhc: ignore-line-regexp: .*/check_.*.dir/.*"
+	@echo "blhc: ignore-line-regexp: .*/test/csync/torture_.*"
+	@echo "blhc: ignore-line-regexp: .*/test/.*"
+	@echo "blhc: ignore-line-regexp: .*/LargeSyncBench\.dir/.*"
+
+# unfortunately icons and translations are installed only together with the gui, so we need to run dh_auto_build
+execute_before_dh_auto_build-indep:
+	dh_auto_build -- -C shell_integration/nautilus
+
+override_dh_auto_test-indep:
+
+
+override_dh_auto_test-arch:
+	mkdir -p obj-$(DEB_HOST_GNU_TYPE)/config
+	- LC_ALL=C.UTF-8 XDG_CONFIG_HOME=$(CURDIR)/obj-$(DEB_HOST_GNU_TYPE)/config xvfb-run -a \
+	       -s "-screen 0 1024x768x24 +extension RANDR +extension RENDER +extension GLX" \
+	       -- dh_auto_test --no-parallel
+	rm -r obj-$(DEB_HOST_GNU_TYPE)/config

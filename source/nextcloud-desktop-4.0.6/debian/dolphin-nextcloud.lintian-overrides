@@ -1,0 +1,2 @@
+# nextclouddolphin plugins use private libraries
+custom-library-search-path RUNPATH /usr/lib/*/nextcloud [usr/lib/*/qt6/plugins/*/nextclouddolphin*plugin.so]

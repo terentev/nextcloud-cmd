@@ -1,0 +1,2 @@
+# false positive: Implements is listed in https://specifications.freedesktop.org/desktop-entry-spec/latest/ar01s06.html
+nextcloud-desktop: desktop-entry-contains-unknown-key Implements [usr/share/applications/com.nextcloud.desktopclient.nextcloud.desktop:*]

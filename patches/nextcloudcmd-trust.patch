@@ -1,0 +1,22 @@
+--- a/src/cmd/cmd.cpp
++++ b/src/cmd/cmd.cpp
+@@ -13,6 +13,7 @@
+ #include <QFileInfo>
+ #include <QJsonDocument>
+ #include <QJsonObject>
++#include <QNetworkAccessManager>
+ #include <QNetworkProxy>
+ #include <qdebug.h>
+
+@@ -443,6 +444,11 @@
+     account->setSslErrorHandler(sslErrorHandler);
+     account->setTrustCertificates(options.trustSSL);
+
++    if (options.trustSSL) {
++        // Qt refuses to ignore certificate errors while HSTS is enabled.
++        account->networkAccessManager()->setStrictTransportSecurityEnabled(false);
++    }
++
+     QEventLoop loop;
+     auto *csjob = new CheckServerJob(account);
+     csjob->setIgnoreCredentialFailure(true);

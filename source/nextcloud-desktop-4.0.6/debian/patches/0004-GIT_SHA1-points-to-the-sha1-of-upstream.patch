@@ -1,0 +1,27 @@
+From: =?utf-8?q?Sandro_Knau=C3=9F?= <hefee@debian.org>
+Date: Tue, 30 Jul 2024 12:35:29 +0200
+Subject: GIT_SHA1 points to the sha1 of upstream.
+
+Origin: Debian
+Forwarded: not-needed
+Last-Update: 2024-07-30
+---
+ CMakeLists.txt | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 3a9c91d..d80384a 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -133,9 +133,8 @@ include(GNUInstallDirs)
+ include(DefineInstallationPaths)
+ include(GenerateExportHeader)
+ 
+-include(GetGitRevisionDescription)
+-
+-get_git_head_revision(GIT_REFSPEC GIT_SHA1)
++# On Debian we always have use a released version
++set(GIT_SHA1 "GITDIR-NOTFOUND")
+ 
+ add_definitions(
+     -DQT_DISABLE_DEPRECATED_BEFORE=0x051200

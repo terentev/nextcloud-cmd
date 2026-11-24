@@ -1,0 +1,8 @@
+theme.qrc
+theme/black/nextcloud/*.png
+theme/black/state-*.png
+theme/colored/*-Nextcloud-icon.png
+theme/colored/nextcloud/*.png
+theme/colored/state-*.png
+theme/white/nextcloud/*.png
+theme/white/state-*.png
